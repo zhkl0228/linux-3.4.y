@@ -558,9 +558,9 @@ static struct hdmi_config {
 	{ "HDMI1080P50D",	 960,  536 },
 	{ "HDMI1080I50D",	 960,  536 },
 
-	{ "HDMI720P60",		1280,  720 },
+	{ "HDMI720P60",         1920, 1080 },
 	{ "HDMI720P60D",	 640,  360 },
-	{ "HDMI720P50",		1280,  720 },
+	{ "HDMI720P50",         1920, 1080 },
 	{ "HDMI720P50D",	 640,  360 },
 
 	{ "HDMI576P16X9",	 720,  576 },
@@ -610,12 +610,13 @@ static struct {
 	{ "HDMI",	&hdmi_def,   0 },	/* Pls keep it at last */
 };
 
-static int lcd_idx = 0;
+static int lcd_idx = 13;
 
 static int __init nanopi3_setup_lcd(char *str)
 {
 	char *delim;
 	int i;
+	struct nxp_lcd *lcdd;
 
 	delim = strchr(str, ',');
 	if (delim)
@@ -646,8 +647,9 @@ static int __init nanopi3_setup_lcd(char *str)
 
 __ret:
 	board_set_ctp(nanopi3_lcd_config[lcd_idx].ctp);
+	lcdd = nanopi3_lcd_config[lcd_idx].lcd;
 
-	printk("Display: %s selected\n", nanopi3_lcd_config[lcd_idx].name);
+	printk("Display: %s selected, idx=%d, width=%d, height=%d\n", nanopi3_lcd_config[lcd_idx].name, lcd_idx, lcdd->width, lcdd->height);
 	return 0;
 }
 early_param("lcd", nanopi3_setup_lcd);
